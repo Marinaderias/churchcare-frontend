@@ -13,7 +13,15 @@ import ScanQrPage from '../pages/ScanQrPage.vue'
 
 import MainLayout from '../layouts/MainLayout.vue'
 
+import AdminLayout from '../layouts/AdminLayout.vue'
+import Dashboard from '../pages/admin/Dashboard.vue'
+import Servants from '../pages/admin/Servants.vue'
+
 const routes = [
+
+  // ==========================
+  // Authentication
+  // ==========================
 
   {
     path: '/',
@@ -25,9 +33,14 @@ const routes = [
     component: Register
   },
 
+  // ==========================
+  // Servant Layout
+  // ==========================
+
   {
     path: '/',
     component: MainLayout,
+
     children: [
 
       {
@@ -41,44 +54,71 @@ const routes = [
       },
 
       {
-        path:'profile',
-        component:Profile
+        path: 'profile',
+        component: Profile
       },
 
       {
-        path:'notifications',
-        component:Notifications
+        path: 'notifications',
+        component: Notifications
       },
 
       {
-        path:'member/:id',
-        component:MemberProfile
+        path: 'member/:id',
+        component: MemberProfile
       },
 
       {
-        path: '/preparations',
-        component: () =>
-         import('../pages/Preparations.vue')
-      },
-
-      {
-        path: '/member/:id/edit',
+        path: 'member/:id/edit',
         component: EditMember
       },
 
       {
-        path: '/scan',
+        path: 'scan',
         component: ScanQrPage
       },
 
+      {
+        path: 'preparations',
+        component: () => import('../pages/Preparations.vue')
+      }
+
     ]
+
+  },
+
+  // ==========================
+  // Admin Layout
+  // ==========================
+
+  {
+    path: '/admin',
+    component: AdminLayout,
+
+    children: [
+
+      {
+        path: '',
+        component: Dashboard
+      },
+
+         {
+            path:'servants',
+            component:Servants
+        },
+
+    ]
+
   }
 
 ]
 
 const router = createRouter({
+
   history: createWebHistory(),
+
   routes
+
 })
 
 export default router

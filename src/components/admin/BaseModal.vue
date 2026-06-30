@@ -17,6 +17,7 @@
                 @click="$emit('close')"
             >
                 ✕
+
             </button>
 
         </div>
@@ -43,11 +44,7 @@ defineProps({
 
 })
 
-defineEmits([
-
-    'close'
-
-])
+defineEmits(['close'])
 
 </script>
 
@@ -67,29 +64,37 @@ defineEmits([
 
     align-items:center;
 
-    z-index:999;
-
     padding:20px;
+
+    z-index:999;
 
 }
 
 .modal{
 
-    width:100%;
+    width:min(900px,100%);
 
-    max-width:550px;
+    max-height:90vh;
 
     background:white;
 
-    border-radius:20px;
+    border-radius:22px;
+
+    display:flex;
+
+    flex-direction:column;
 
     overflow:hidden;
 
-    animation:popup .25s ease;
+    animation:popup .25s;
 
 }
 
 .modal-header{
+
+    padding:22px 25px;
+
+    border-bottom:1px solid #eee;
 
     display:flex;
 
@@ -97,15 +102,15 @@ defineEmits([
 
     align-items:center;
 
-    padding:20px;
-
-    border-bottom:1px solid #eee;
+    flex-shrink:0;
 
 }
 
-.modal-body{
+.modal-header h2{
 
-    padding:20px;
+    margin:0;
+
+    font-size:24px;
 
 }
 
@@ -115,9 +120,17 @@ defineEmits([
 
     background:none;
 
-    font-size:24px;
-
     cursor:pointer;
+
+    font-size:26px;
+
+}
+
+.modal-body{
+
+    padding:25px;
+
+    overflow-y:auto;
 
 }
 
@@ -125,17 +138,17 @@ defineEmits([
 
 from{
 
-    opacity:0;
+transform:scale(.9);
 
-    transform:scale(.9);
+opacity:0;
 
 }
 
 to{
 
-    opacity:1;
+transform:scale(1);
 
-    transform:scale(1);
+opacity:1;
 
 }
 
@@ -143,11 +156,33 @@ to{
 
 @media(max-width:768px){
 
+.overlay{
+
+align-items:flex-end;
+
+padding:0;
+
+}
+
 .modal{
 
-    max-width:100%;
+width:100%;
 
-    border-radius:18px;
+max-height:95vh;
+
+border-radius:25px 25px 0 0;
+
+}
+
+.modal-header{
+
+padding:18px;
+
+}
+
+.modal-body{
+
+padding:18px;
 
 }
 

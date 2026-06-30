@@ -51,6 +51,15 @@
 
 </BaseModal>
 
+<Toast
+
+    :show="toast"
+
+    :message="toastMessage"
+
+/>
+
+
 </template>
 
 <script setup>
@@ -60,8 +69,12 @@ import { ref } from 'vue'
 import DataTable from '../../components/admin/DataTable.vue'
 import BaseModal from '../../components/admin/BaseModal.vue'
 import ServantForm from '../../components/admin/ServantForm.vue'
+import Toast from '../../components/common/Toast.vue'
+import { onMounted } from 'vue'
+import api from '../../services/api'
 
 const showModal = ref(false)
+
 const columns = [
 
     {
@@ -86,25 +99,7 @@ const columns = [
 
 ]
 
-const servants = ref([
-
-    {
-        id: 1,
-        name: 'Marina',
-        phone: '0100000000',
-        email: 'marina@gmail.com',
-        role: 'Admin'
-    },
-
-    {
-        id: 2,
-        name: 'Mina',
-        phone: '0111111111',
-        email: 'mina@gmail.com',
-        role: 'Servant'
-    }
-
-])
+const servants = ref([])
 
 function editServant(servant){
 
@@ -118,11 +113,57 @@ function deleteServant(servant){
 
 }
 
-function saveServant(data){
+async function loadServants(){
 
-    console.log(data)
+    try{
 
-    showModal.value = false
+        const response = await api.get('/users')
+
+        servants.value = response.data
+
+    }
+
+    catch(error){
+
+        console.error(error)
+
+    }
+
+}
+
+onMounted(()=>{
+
+    loadServants()
+
+})
+
+async function saveServant(data){
+
+    try{
+
+        await api.post('/users',data)
+
+        showModal.value=false
+
+        toastMessage.value='Servant Added Successfully 🎉'
+
+        toast.value=true
+
+        setTimeout(()=>{
+
+            toast.value=false
+
+        },2500)
+
+        await loadServants()
+
+    }
+
+    catch(error){
+
+        console.error(error)
+
+    }
 
 }
 

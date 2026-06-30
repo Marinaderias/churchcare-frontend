@@ -24,10 +24,10 @@
          v-if="member.member_code"
        class="qr-container"
 >
-  <QrcodeVue
-         :value="member.member_code"
-         :size="180"
-         />
+    <QrcodeVue
+       :value="member.member_code"
+       :size="180"
+       />
      </div> 
     </div>
 

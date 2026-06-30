@@ -14,6 +14,23 @@
 
       <div id="reader"></div>
 
+ <div class="upload-wrapper">
+
+  <label class="upload-btn">
+
+    📁 Upload QR Image
+
+    <input
+      type="file"
+      accept="image/*"
+      @change="scanImage"
+      hidden
+    />
+
+  </label>
+
+   </div>
+
       <p class="scan-tip">
         Point the camera at the member QR code
       </p>
@@ -28,10 +45,12 @@
 
 import { onMounted } from 'vue'
 import { Html5Qrcode } from 'html5-qrcode'
+import api from '../services/api'
 
+let html5QrCode
 onMounted(async () => {
 
-  const html5QrCode = new Html5Qrcode("reader")
+  html5QrCode = new Html5Qrcode("reader")
 
   try {
 
@@ -44,14 +63,35 @@ onMounted(async () => {
         qrbox: 250
       },
 
-      (decodedText) => {
+      async (decodedText) => {
+      console.log(decodedText)
+             alert(decodedText)
 
-        alert(
-          "QR Found: " +
-          decodedText
-        )
+  try {
 
-      },
+    await api.post('/attendances', {
+
+      member_code: decodedText
+
+    })
+
+    alert(
+      '✅ Attendance Registered'
+    )
+
+  }
+
+  catch(error){
+
+    console.error(error)
+
+    alert(
+      '❌ Attendance Failed'
+    )
+
+  }
+
+},
 
       () => {}
 
@@ -66,6 +106,46 @@ onMounted(async () => {
   }
 
 })
+
+async function scanImage(event){
+
+  const file = event.target.files[0]
+
+  if(!file) return
+
+  try{
+
+    const decodedText =
+      await html5QrCode.scanFile(
+        file,
+        true
+      )
+
+    await api.post('/attendances',{
+
+      member_code:
+        decodedText
+
+    })
+
+    alert(
+      '✅ Attendance Registered'
+    )
+
+  }
+
+  catch(error){
+
+    console.error(error)
+
+    alert(
+      '❌ Invalid QR'
+    )
+
+  }
+
+}
+
 
 </script>
 
@@ -115,6 +195,8 @@ onMounted(async () => {
 
 #reader{
 
+  width:100%;
+
   max-width:500px;
 
   margin:auto;
@@ -122,6 +204,8 @@ onMounted(async () => {
   border-radius:20px;
 
   overflow:hidden;
+
+  box-sizing:border-box;
 }
 
 
@@ -150,6 +234,67 @@ onMounted(async () => {
   color:#777;
 
   font-size:14px;
+}
+
+.upload-wrapper{
+
+  max-width:500px;
+
+  width:100%;
+
+  margin:20px auto 0;
+}
+
+.upload-btn{
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+  width:100%;
+
+  min-height:55px;
+
+  background:black;
+
+  color:white;
+
+  border-radius:15px;
+
+  cursor:pointer;
+
+  font-weight:600;
+
+  box-sizing:border-box;
+
+  transition:.3s;
+}
+
+.upload-btn:hover{
+
+  opacity:.9;
+}
+
+@media (max-width:768px){
+
+  .scanner-card{
+
+    padding:15px;
+  }
+
+  .scan-title{
+
+    font-size:26px;
+  }
+
+  .upload-btn{
+
+    min-height:50px;
+
+    font-size:14px;
+  }
 }
 
 </style>
